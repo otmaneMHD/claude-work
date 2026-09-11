@@ -431,8 +431,22 @@ def report(out_json: str | None) -> int:
         if note:
             print(f"{'':<{w}}   {note}")
 
+    # Facts we ASSERT but never evaluated are NOT passes. With --scan-mode none the whole
+    # DICOM half is silently absent from RESULTS, so "0 failures" must not read as "verified".
+    evaluated = {r[0] for r in RESULTS}
+    outstanding = [k for k in ASSERTED if k not in evaluated]
+    outstanding += [r[0] for r in RESULTS if r[3] == "SKIP"]
+    if outstanding:
+        print("\nOUTSTANDING — asserted in §3, NOT measured by this run:")
+        for k in outstanding:
+            print(f"  - {k}")
+        print("  Re-run with --scan-mode full (or sample) to close these.")
+
     print("\n" + "=" * 78)
-    if fails == 0:
+    if fails == 0 and outstanding:
+        print(f"NO FAILURES, BUT {len(outstanding)} OF {len(ASSERTED)} ASSERTED FACTS ARE UNMEASURED.")
+        print("§3 is NOT yet [M] and Gate G1 is NOT passed. Close the outstanding list first.")
+    elif fails == 0:
         print("ALL CHECKS PASSED — §3 is now [M] (measured). Proceed to Phase 1.")
     else:
         print(f"{fails} CHECK(S) FAILED.")
@@ -442,11 +456,13 @@ def report(out_json: str | None) -> int:
     print("=" * 78)
 
     if out_json:
+        RESULTS.extend((k, "not measured", str(ASSERTED[k][0]), "OUTSTANDING", "")
+                       for k in outstanding if k in ASSERTED)
         Path(out_json).write_text(json.dumps(
             [{"check": n, "measured": str(m), "expected": str(e), "status": s, "note": nt}
              for n, m, e, s, nt in RESULTS], indent=2))
         print(f"\nwrote {out_json}")
-    return 1 if fails else 0
+    return 1 if (fails or outstanding) else 0
 
 
 def main() -> int:
