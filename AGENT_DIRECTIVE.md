@@ -234,7 +234,7 @@ rsna-knee/
 If an earlier entry was wrong, you append a correction that references it.
 
 > **[CORRECTED — the repo you are inheriting]** `src/` and `docs/` already exist on branch
-> `claude/pensive-euler-lt2rpc` and already hold four tested modules and a research dossier.
+> `main` and already hold four tested modules and a research dossier.
 > `tests/`, `logs/` and `artifacts/` do not exist yet — create them. See Part 11.
 
 ### EXPERIMENTS.md entry format — mandatory
@@ -631,7 +631,9 @@ Additionally, once per stage, re-run the full leak suite from scratch. Tests rot
   result in `EXPERIMENTS.md` and move on. Negative results are results — record them.
 - **Report honestly.** "Stage 4 CV is 0.71, below the 0.80 target, three hypotheses under test" is a
   good report. "Stage 4 complete ✅" attached to an unverified number is a failure.
-- **Work on branch `claude/pensive-euler-lt2rpc`.** `main` holds only a stub README.
+- **Branch from `main`.** It carries everything described here; `claude/pensive-euler-lt2rpc` is
+  the same commit under its original name. Open a branch for your own work rather than committing
+  straight to `main`.
 
 ---
 
@@ -685,7 +687,8 @@ number you can, because the first one wastes every week that follows it.**
 
 ### 11.1 The repository
 
-Branch `claude/pensive-euler-lt2rpc`. `main` is a stub — do not work from it.
+`main` carries all of it. (`claude/pensive-euler-lt2rpc` points at the same commit — it is the
+branch this was built on, kept as a pointer, not a second version.)
 
 | File | Lines | What it is | Trust |
 |---|---|---|---|
