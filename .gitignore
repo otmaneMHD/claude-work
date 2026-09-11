@@ -1,0 +1,8 @@
+.kaggle/
+kaggle.json
+*.dcm
+data/
+artifacts/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

@@ -1,0 +1,18 @@
+# Phase 0 / label work — CPU only, runs anywhere
+numpy>=1.24
+pandas>=2.0
+pydicom>=2.4
+pyarrow>=14.0          # parquet for the header scan
+scikit-learn>=1.3      # metrics cross-check only; the AUC in score_labelers.py is dependency-free
+
+# Phase 1+ — Kaggle GPU sessions (already present in the Kaggle image; listed for reproducibility)
+# torch>=2.1
+# timm>=0.9
+# albumentations>=1.4
+
+# Inference-notebook insurance: the hidden test set may contain compressed transfer syntaxes
+# that the training data does not (WORKING_NOTE.md §3.8). Without these the submission crashes.
+# pylibjpeg
+# pylibjpeg-libjpeg
+# pylibjpeg-openjpeg
+# python-gdcm
