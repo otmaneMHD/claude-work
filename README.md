@@ -10,7 +10,7 @@ Kaggle: [`rsna-knee-abnormality-detection`](https://www.kaggle.com/competitions/
 
 | Doc | What it is |
 |---|---|
-| **[HANDOFF_GEMINI.md](HANDOFF_GEMINI.md)** | **Start here if you arrived with the `RSNA_KNEE_AGENT_PROMPT.md` directive.** Reconciles that directive with this repo: where they agree, the four places they clash, and what to do first. |
+| **[AGENT_DIRECTIVE.md](AGENT_DIRECTIVE.md)** | **The master prompt. Start here.** Gates, evidence protocol, leak suite, build order, definition of done — and Part 11, what this repo is and how much of it to trust. |
 | **[WORKING_NOTE.md](WORKING_NOTE.md)** | **The exhaustive note.** Every fact, its source, its confidence, and the full audit trail of this session. **Read this first — it is the handoff.** |
 | **[PLAN.md](PLAN.md)** | The campaign plan: phases, decisions, exit criteria, GPU budget, day-by-day schedule to 22 Oct |
 | [docs/SOURCES.md](docs/SOURCES.md) | Every URL, repo and artifact consulted, with what it gave us |
@@ -38,9 +38,11 @@ Do **not** start by downloading the data or re-running the web research. Both ar
 summarised. Start at [WORKING_NOTE.md §0](WORKING_NOTE.md#0-handoff-contract), which tells you
 exactly what is established, what is assumed, and what the first three things to verify are.
 
-If you were handed the separate `RSNA_KNEE_AGENT_PROMPT.md` directive alongside this repo, read
-**[HANDOFF_GEMINI.md](HANDOFF_GEMINI.md)** first instead. The two documents are complementary —
-the directive supplies the gates and evidence discipline this repo lacks, this repo supplies the
-research and scaffolding the directive assumes you will build from scratch — but they conflict on
-four points, one of which (sending report text to a hosted LLM) carries compliance risk and must
-be settled **before** any report text is handled.
+Then work to **[AGENT_DIRECTIVE.md](AGENT_DIRECTIVE.md)**, which is the master prompt: the gates,
+the evidence protocol and the seven-test leak suite that this repo's own scaffolding does *not*
+provide. Two things in it are load-bearing and easy to skim past:
+
+- **Do not send report text to a hosted LLM** pending a host ruling on Competition Rule 4.b
+  (Part 2). If you are a hosted model, that includes your own context.
+- **Nothing in this repo is measured.** Every data fact is second-hand and tagged. Converting it
+  to measurement is your first job, and `src/phase0_verify.py` is the tool that does it.

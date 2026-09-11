@@ -251,7 +251,10 @@ def scan_one_series(args) -> dict | None:
         for t in HEADER_TAGS:
             v = getattr(ds, t, None)
             if t == "PixelSpacing" and v is not None:
-                out["pixel_spacing"] = float(v[0])
+                # PixelSpacing is [row spacing, column spacing] — the two differ whenever
+                # in-plane pixels are anisotropic, and conflating them skews x_centre.
+                out["pixel_spacing"] = float(v[0])          # between rows (vertical)
+                out["pixel_spacing_col"] = float(v[1]) if len(v) > 1 else float(v[0])
             elif t in ("ImagePositionPatient", "ImageOrientationPatient") and v is not None:
                 out[t] = [float(x) for x in v]
             else:
@@ -266,16 +269,23 @@ def scan_one_series(args) -> dict | None:
 def geometric_side(row) -> str | None:
     """Side of the body the image centre sits on, from DICOM geometry.
 
-    x_centre = IPP[0] + 0.5*cols*ps*IOP[0] + 0.5*rows*ps*IOP[3]
+    x_centre = IPP[0] + 0.5*Columns*ColSpacing*IOP[0] + 0.5*Rows*RowSpacing*IOP[3]
+
+    IOP[0:3] is the direction of increasing COLUMN index, so it pairs with PixelSpacing[1];
+    IOP[3:6] is the direction of increasing ROW index, so it pairs with PixelSpacing[0].
+    Using one spacing for both is only correct for square pixels.
+
     DICOM patient coordinates are LPS, so +x = patient LEFT. §3.7 measures this rule at
     98.5% accuracy for |x| >= 20 mm.
     """
     ipp, iop = row.get("ImagePositionPatient"), row.get("ImageOrientationPatient")
-    ps, rows_, cols = row.get("pixel_spacing"), row.get("Rows"), row.get("Columns")
-    if not (isinstance(ipp, list) and isinstance(iop, list) and ps and rows_ and cols):
+    ps_row, rows_, cols = row.get("pixel_spacing"), row.get("Rows"), row.get("Columns")
+    ps_col = row.get("pixel_spacing_col") or ps_row
+    if not (isinstance(ipp, list) and isinstance(iop, list) and ps_row and rows_ and cols):
         return None
     try:
-        x = ipp[0] + 0.5 * float(cols) * ps * iop[0] + 0.5 * float(rows_) * ps * iop[3]
+        x = (ipp[0] + 0.5 * float(cols) * ps_col * iop[0]
+                    + 0.5 * float(rows_) * ps_row * iop[3])
     except Exception:  # noqa: BLE001
         return None
     if abs(x) < 20:
