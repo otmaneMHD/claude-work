@@ -10,6 +10,7 @@ Kaggle: [`rsna-knee-abnormality-detection`](https://www.kaggle.com/competitions/
 
 | Doc | What it is |
 |---|---|
+| **[HANDOFF_GEMINI.md](HANDOFF_GEMINI.md)** | **Start here if you arrived with the `RSNA_KNEE_AGENT_PROMPT.md` directive.** Reconciles that directive with this repo: where they agree, the four places they clash, and what to do first. |
 | **[WORKING_NOTE.md](WORKING_NOTE.md)** | **The exhaustive note.** Every fact, its source, its confidence, and the full audit trail of this session. **Read this first — it is the handoff.** |
 | **[PLAN.md](PLAN.md)** | The campaign plan: phases, decisions, exit criteria, GPU budget, day-by-day schedule to 22 Oct |
 | [docs/SOURCES.md](docs/SOURCES.md) | Every URL, repo and artifact consulted, with what it gave us |
@@ -36,3 +37,10 @@ verification command to run in the first Kaggle session.
 Do **not** start by downloading the data or re-running the web research. Both are already
 summarised. Start at [WORKING_NOTE.md §0](WORKING_NOTE.md#0-handoff-contract), which tells you
 exactly what is established, what is assumed, and what the first three things to verify are.
+
+If you were handed the separate `RSNA_KNEE_AGENT_PROMPT.md` directive alongside this repo, read
+**[HANDOFF_GEMINI.md](HANDOFF_GEMINI.md)** first instead. The two documents are complementary —
+the directive supplies the gates and evidence discipline this repo lacks, this repo supplies the
+research and scaffolding the directive assumes you will build from scratch — but they conflict on
+four points, one of which (sending report text to a hosted LLM) carries compliance risk and must
+be settled **before** any report text is handled.
